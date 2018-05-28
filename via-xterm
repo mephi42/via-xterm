@@ -26,6 +26,9 @@ def which(program):
         raise Exception(program + ': command not found')
 
 
+if len(sys.argv) < 2:
+    sys.stderr.write('Usage: {0} script [argument ...]\n'.format(sys.argv[0]))
+    sys.exit(1)
 script = which(sys.argv[1])
 pid, fd = pty.fork()
 if pid == pty.CHILD:
