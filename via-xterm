@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+import os
+import pty
+import signal
+import sys
+
+
+def os_readline(fd):
+    s = b''
+    while True:
+        c = os.read(fd, 1)
+        s += c
+        if c == b'\n' or c == b'':
+            break
+    return s
+
+
+def which(program):
+    if os.sep in program:
+        return program
+    for directory in os.getenv('PATH', '').split(os.pathsep):
+        path = os.path.join(directory, program)
+        if os.access(path, os.R_OK | os.X_OK):
+            return path
+    else:
+        raise Exception(program + ': command not found')
+
+
+script = which(sys.argv[1])
+pid, fd = pty.fork()
+if pid == pty.CHILD:
+    xterm = ['xterm', '-S/{0}'.format(pty.STDOUT_FILENO)]
+    os.execvp(xterm[0], xterm)
+# https://github.com/ThomasDickey/xterm-snapshots/blob/xterm-333/main.c#L2679
+window_id = int(os_readline(fd).strip(), 16)
+os.environ['TERM'] = 'xterm'
+sys.stdin.close()
+os.dup2(fd, pty.STDIN_FILENO)
+sys.stdin = os.fdopen(pty.STDIN_FILENO, 'r')
+sys.__stdin__ = sys.stdin
+sys.stdout.close()
+os.dup2(fd, pty.STDOUT_FILENO)
+sys.stdout = os.fdopen(pty.STDOUT_FILENO, 'w')
+sys.__stdout__ = sys.stdout
+os.close(fd)
+sys.argv = sys.argv[1:]
+try:
+    with open(script) as fp:
+        script = fp.read()
+    exec(script)
+finally:
+    os.kill(pid, signal.SIGTERM)
