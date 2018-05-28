@@ -3,6 +3,8 @@ import os
 import pty
 import signal
 import sys
+import termios
+import tty
 
 
 def os_readline(fd):
@@ -26,6 +28,12 @@ def which(program):
         raise Exception(program + ': command not found')
 
 
+def configure_termios(fd):
+    attributes = termios.tcgetattr(fd)
+    attributes[tty.LFLAG] &= ~termios.IEXTEN
+    termios.tcsetattr(fd, termios.TCSADRAIN, attributes)
+
+
 if len(sys.argv) < 2:
     sys.stderr.write('Usage: {0} script [argument ...]\n'.format(sys.argv[0]))
     sys.exit(1)
@@ -34,6 +42,7 @@ pid, fd = pty.fork()
 if pid == pty.CHILD:
     xterm = ['xterm', '-S/{0}'.format(pty.STDOUT_FILENO)]
     os.execvp(xterm[0], xterm)
+configure_termios(fd)
 # https://github.com/ThomasDickey/xterm-snapshots/blob/xterm-333/main.c#L2679
 window_id = int(os_readline(fd).strip(), 16)
 os.environ['TERM'] = 'xterm'
