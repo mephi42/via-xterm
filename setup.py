@@ -5,7 +5,7 @@ with open('README.rst') as fp:
 
 setuptools.setup(
     name='via-xterm',
-    version='0.1.1',
+    version='0.1.2',
     author='mephi42',
     author_email='mephi42@gmail.com',
     description='Connect Python script to xterm',
