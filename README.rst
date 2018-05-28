@@ -1,10 +1,14 @@
-# Synopsis
-Connect stdin/stdout of a Python script to `xterm`.
+via-xterm: connect Python script to `xterm`
+###########################################
 
-# Usage
+Usage
+=====
+
 `via-xterm script [argument ...]`
 
-# Why?
+Why?
+====
+
 To simplify debugging of scripts, that use escape sequences/ncurses/urwid, in
 an IDE (e.g. PyCharm). Normally IDEs' integrated consoles do not handle all
 escape sequences, so one has to either tolerate that or use remote debugging.
