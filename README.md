@@ -7,6 +7,8 @@ Connect stdin/stdout of a Python script to `xterm`.
 # Why?
 To simplify debugging of scripts, that use escape sequences/ncurses/urwid, in
 an IDE (e.g. PyCharm). Normally IDEs' integrated consoles do not handle all
-escape sequences, so one has either tolerate that or use remote debugging.
-`via-xterm` allows to circumvent that by wrapping the desired script in a way
-that its stdin/stdout are connected to an `xterm -S` instance.
+escape sequences, so one has to either tolerate that or use remote debugging.
+`via-xterm` allows to circumvent that by wrapping the target script in a way
+that its stdin/stdout are connected to a new `xterm -S` instance, through
+which a user can interact with the script. Debugging target script is possible,
+because it is run using `compile()` and `exec()` builtins.

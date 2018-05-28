@@ -46,7 +46,7 @@ os.close(fd)
 sys.argv = sys.argv[1:]
 try:
     with open(script) as fp:
-        script = fp.read()
-    exec(script)
+        code = compile(fp.read(), script, 'exec')
+    exec(code)
 finally:
     os.kill(pid, signal.SIGTERM)
