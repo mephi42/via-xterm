@@ -1,3 +1,6 @@
+.. image:: http://img.shields.io/pypi/v/via-xterm.svg
+   :target: https://pypi.python.org/pypi/via-xterm
+
 via-xterm: connect Python script to ``xterm``
 #############################################
 
